@@ -10,31 +10,31 @@
 	<string>PluginHelper</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>369EB2D337135B8BC7F1E2C8E70AAFE613F70ACE</key>
-		<string>https://github.com/abynim/sketch-UX-Tools.git</string>
+		<key>A049AFC113EB9A122419D27A34393EDD42A4865B</key>
+		<string>https://github.com/abynim/Sketch-PluginHelper.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>PluginHelper/PluginHelper/PluginHelper.xcodeproj</string>
+	<string>_source/PluginHelper.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>369EB2D337135B8BC7F1E2C8E70AAFE613F70ACE</key>
-		<string>../../../..</string>
+		<key>A049AFC113EB9A122419D27A34393EDD42A4865B</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/abynim/sketch-UX-Tools.git</string>
+	<string>https://github.com/abynim/Sketch-PluginHelper.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>369EB2D337135B8BC7F1E2C8E70AAFE613F70ACE</string>
+	<string>A049AFC113EB9A122419D27A34393EDD42A4865B</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>369EB2D337135B8BC7F1E2C8E70AAFE613F70ACE</string>
+			<string>A049AFC113EB9A122419D27A34393EDD42A4865B</string>
 			<key>IDESourceControlWCCName</key>
-			<string>sketch-UX-Tools</string>
+			<string>Sketch-PluginHelper</string>
 		</dict>
 	</array>
 </dict>

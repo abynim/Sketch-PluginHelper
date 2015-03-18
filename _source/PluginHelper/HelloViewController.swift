@@ -13,6 +13,7 @@ class HelloViewController: NSViewController {
     
     @IBOutlet weak var helloLabel: NSTextField!
     
+    @IBOutlet weak var redButton: NSButton!
     @IBAction func handleRedButton(sender: AnyObject) {
         
         var script  = "#import 'lib/helperMethods.js'\n"
@@ -38,6 +39,11 @@ class HelloViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set a button as default, triggered on pressing Return
+        redButton.bezelStyle = NSBezelStyle.RoundedBezelStyle
+        redButton.keyEquivalent = "\r"
+        
+        // Use variables sent from Sketch by accessing SketchPlugin.params
         if let numberOfLayers = SketchPlugin.params["numberOfLayers"] as? Int {
             helloLabel.stringValue = "Hello, you have \(numberOfLayers) layers selected."
         }
