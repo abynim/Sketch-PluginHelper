@@ -1,0 +1,27 @@
+#import 'lib/common.js'
+
+kPluginName = "Plugin Helper Example",
+kHelperAppName = "PluginHelper.app",
+
+// Set a unique value. Usually the reverse of your domain and the name of your plugin
+kPluginDomain = "com.silverux.sketchplugins.pluginhelper"
+
+function run() {
+	
+	if(selectionIsEmpty()) {
+		showDialog("Select something!")
+		return
+	}
+	
+	// Create a params object to hold the info to be sent to Plugin Helper.
+	// This object will be converted to JSON and will be accessible in Xcode.
+	var params = {
+		numberOfLayers:[selection count]
+	}
+	
+	// Send parameters to Plugin Helper
+	sendParamsToHelperApp(kHelperAppName, params)
+	
+}
+
+run()
