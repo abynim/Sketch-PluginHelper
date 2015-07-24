@@ -10,12 +10,9 @@ import Cocoa
 
 class SketchPlugin:NSObject {
     
-    
     struct StaticVars {
         static var skParams:[String:AnyObject]!
         static var launcherFilePath:String!
-        static var scriptPath:String!
-        static var scriptFolder:String!
     }
     
     class var params:[String:AnyObject]! {
@@ -25,6 +22,36 @@ class SketchPlugin:NSObject {
             }
             return StaticVars.skParams
         }
+    }
+    
+    class var launcherFilePath:String {
+        return StaticVars.launcherFilePath
+    }
+    
+    class var workingFolderPath:String {
+        return StaticVars.launcherFilePath.stringByDeletingLastPathComponent
+    }
+    
+    class var manifestJSON:[String:AnyObject]! {
+        get  {
+            if let scriptFolder = params["scriptFolder"] as? String {
+                let filePath = "\(scriptFolder)/manifest.json"
+                let errorPointer = NSErrorPointer()
+                if let fileData = NSData(contentsOfFile: filePath, options: NSDataReadingOptions.allZeros, error: errorPointer)
+                {
+                    let jsonDict: AnyObject! = NSJSONSerialization.JSONObjectWithData(fileData, options: NSJSONReadingOptions.allZeros, error: errorPointer)
+                    return jsonDict as? [String:AnyObject]
+                }
+            }
+            return nil
+        }
+    }
+    
+    class var manifestFilePath:String! {
+        if let scriptFolder = params["scriptFolder"] as? String {
+            return "\(scriptFolder)/manifest.json"
+        }
+        return nil
     }
     
     class func terminate() {
@@ -39,9 +66,7 @@ class SketchPlugin:NSObject {
         let jsonDict: AnyObject! = NSJSONSerialization.JSONObjectWithData(fileData!, options: NSJSONReadingOptions.allZeros, error: errorPointer)
         
         // Save the variables sent via Sketch as a global Dictionary
-        StaticVars.skParams = jsonDict as [String:AnyObject]
-        
-        StaticVars.scriptFolder = params["scriptFolder"] as? String
+        StaticVars.skParams = jsonDict as? [String:AnyObject]
         StaticVars.launcherFilePath = filePath
         
         completion?()
@@ -93,6 +118,72 @@ class SketchPlugin:NSObject {
         
     }
     
+    class func enableCommandWithIdentifier(identifier:String) {
+        
+        if var manifest = self.manifestJSON {
+            if var menu = manifest["menu"] as? [String:AnyObject] {
+                // check if command exists
+                if let commands = manifest["commands"] as? [[String:String]] {
+                    for command in commands {
+                        if command["identifier"] == identifier {
+                            if var menuItems = menu["items"] as? [String] {
+                                if find(menuItems, identifier) == nil {
+                                    menuItems.append(identifier)
+                                    menu["items"] = menuItems
+                                    manifest["menu"] = menu
+                                    
+                                    writeJSONToFile(manifest, filePath: manifestFilePath)
+                                }
+                            }
+                            break
+                        }
+                    }
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
+    class func disableCommandWithIdentifier(identifier:String) {
+        
+        if var manifest = self.manifestJSON {
+            if var menu = manifest["menu"] as? [String:AnyObject] {
+                // check if command exists
+                
+                if var menuItems = menu["items"] as? [String]
+                {
+                    if let itemIndex = find(menuItems, identifier)
+                    {
+                        menuItems.removeAtIndex(itemIndex)
+                        menu["items"] = menuItems
+                        manifest["menu"] = menu
+                        
+                        writeJSONToFile(manifest, filePath: manifestFilePath)
+                    }
+                }
+                
+            }
+        }
+        
+    }
+    
+    class func isCommandEnabled(identifier:String) -> Bool {
+        if var manifest = self.manifestJSON
+        {
+            if var menu = manifest["menu"] as? [String:AnyObject]
+            {
+                if var menuItems = menu["items"] as? [String]
+                {
+                    return find(menuItems, identifier) != nil
+                }
+            }
+        }
+        return false
+    }
+    
+    
     class func bringSketchInFocus() {
         if let appName = params["appName"] as? String {
             NSWorkspace.sharedWorkspace().launchApplication(appName)
@@ -100,5 +191,15 @@ class SketchPlugin:NSObject {
             NSWorkspace.sharedWorkspace().launchApplication("Sketch")
         }
     }
+    
+    
+    class func writeJSONToFile(jsonObject:AnyObject, filePath:String) {
+        let errorPointer = NSErrorPointer()
+        let jsonData = NSJSONSerialization.dataWithJSONObject(jsonObject, options: NSJSONWritingOptions.PrettyPrinted, error: errorPointer)
+        if let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding) {
+            jsonString.writeToFile(filePath, atomically: true, encoding: NSUTF8StringEncoding, error: nil)
+        }
+    }
+    
     
 }
