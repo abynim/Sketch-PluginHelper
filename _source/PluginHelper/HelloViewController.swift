@@ -16,7 +16,7 @@ class HelloViewController: NSViewController {
     @IBOutlet weak var redButton: NSButton!
     @IBAction func handleRedButton(sender: AnyObject) {
         
-        var script  = "@import 'helperMethods.js'\n"
+        var script  = "@import 'lib/common.js'\n@import 'lib/helperMethods.js'\n"
             script += "applyColorToSelection('FF654E')"
         
         // Save this script to a .js file

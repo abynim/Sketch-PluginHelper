@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // The initial WindowController
     var _helloWindowController:NSWindowController?
-
+    var _contentVC:NSViewController!
     
     // MARK: - Handle opening the launcher file
     func application(sender: NSApplication, openFile filename: String) -> Bool {
@@ -23,11 +23,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         SketchPlugin.parseLauncherFile(filename, completion: {[unowned self] () -> Void in
             
             // For this example, we initialize and show HelloWindowController from Main.storyboard
-            if self._helloWindowController == nil {
-                if let sb = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle()) {
-                    self._helloWindowController = sb.instantiateControllerWithIdentifier("HelloWindow") as? NSWindowController
+            if let
+                sb = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            {
+                self._helloWindowController = sb.instantiateControllerWithIdentifier("HelloWindow") as? NSWindowController
+            
+                // `vcID` is an example param sent from Sketch,
+                // based on which we load the apropriate NSViewController.
+                // You can send any kind of param from Sketch and handle it here.
+                if let
+                    vcID = SketchPlugin.params["vcID"] as? String,
+                    contentVC = sb.instantiateControllerWithIdentifier(vcID) as? NSViewController
+                {
+                    // Need to hold on to a strong reference,
+                    // or the viewController could get deallocated too soon
+                    self._contentVC = contentVC
+                    
+                    // set the window's contentViewController
+                    self._helloWindowController?.window?.contentViewController = self._contentVC
                 }
+                
             }
+            
             
             self._helloWindowController!.window?.center()
             self._helloWindowController!.showWindow(nil)

@@ -667,7 +667,7 @@
         <!--Hello View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="HelloViewController" customModule="PluginHelper" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="firstVC" id="XfG-lQ-9wD" customClass="HelloViewController" customModule="PluginHelper" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="346" height="181"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -725,7 +725,7 @@ Gw
         <!--View Controller-->
         <scene sceneID="q6h-8z-KdH">
             <objects>
-                <viewController id="WiG-ht-AFQ" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="secondVC" id="WiG-ht-AFQ" sceneMemberID="viewController">
                     <view key="view" id="NQG-PK-4HN">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
