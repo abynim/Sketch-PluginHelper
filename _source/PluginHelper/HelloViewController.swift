@@ -25,7 +25,11 @@ class HelloViewController: NSViewController {
             SketchPlugin.executeScriptAtPath(scriptPath)
             
             // Delete the .js file after it has executed
-            NSFileManager.defaultManager().removeItemAtPath(scriptPath, error: nil)
+            do {
+                try NSFileManager.defaultManager().removeItemAtPath(scriptPath)
+            } catch let error as NSError {
+                print("An error occurred: \(error)")
+            }
         }
         
         // Call terminate to close the helper app when you're done.

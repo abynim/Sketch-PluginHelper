@@ -17,22 +17,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Handle opening the launcher file
     func application(sender: NSApplication, openFile filename: String) -> Bool {
-        println("Open file named: \(filename)")
+        print("Open file named: \(filename)")
         
         // After calling this method the parameters you send from Sketch will be available via SketchPlugin.params
         SketchPlugin.parseLauncherFile(filename, completion: {[unowned self] () -> Void in
             
             // For this example, we initialize and show HelloWindowController from Main.storyboard
             if self._helloWindowController == nil {
-                if let sb = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle()) {
-                    self._helloWindowController = sb.instantiateControllerWithIdentifier("HelloWindow") as? NSWindowController
-                }
+                let sb = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+                self._helloWindowController = sb.instantiateControllerWithIdentifier("HelloWindow") as? NSWindowController
+                
             }
             
             self._helloWindowController!.window?.center()
             self._helloWindowController!.showWindow(nil)
             // Make the window float above everything else
-            self._helloWindowController!.window?.level = Int(CGWindowLevelForKey(Int32(kCGFloatingWindowLevelKey)))
+            self._helloWindowController!.window?.level = Int(CGWindowLevelForKey(CGWindowLevelKey.CursorWindowLevelKey))
             
         })
         
