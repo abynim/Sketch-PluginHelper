@@ -28,18 +28,23 @@ class SketchPlugin:NSObject {
     }
     
     class func terminate() {
-        NSFileManager.defaultManager().removeItemAtPath(StaticVars.launcherFilePath, error: nil)
+        do {
+            try NSFileManager.defaultManager().removeItemAtPath(StaticVars.launcherFilePath)
+        } catch let error as NSError {
+            print(error)
+        }
         NSApplication.sharedApplication().terminate(nil)
     }
     
     class func parseLauncherFile(filePath:String, completion: (() -> Void)?=nil) {
         // Read the file as json
-        let errorPointer = NSErrorPointer()
-        let fileData = NSData(contentsOfFile: filePath, options: NSDataReadingOptions.allZeros, error: errorPointer)
-        let jsonDict: AnyObject! = NSJSONSerialization.JSONObjectWithData(fileData!, options: NSJSONReadingOptions.allZeros, error: errorPointer)
+     
+        let fileData =  NSData(contentsOfFile: filePath)
+        
+        let jsonDict: AnyObject! = try! NSJSONSerialization.JSONObjectWithData(fileData!, options: NSJSONReadingOptions())
         
         // Save the variables sent via Sketch as a global Dictionary
-        StaticVars.skParams = jsonDict as [String:AnyObject]
+        StaticVars.skParams = jsonDict as! [String:AnyObject]
         
         StaticVars.scriptFolder = params["scriptFolder"] as? String
         StaticVars.launcherFilePath = filePath
@@ -59,7 +64,11 @@ class SketchPlugin:NSObject {
     class func createPluginWithText(pluginText:String, pluginName:String="temp") -> String? {
         if let scriptFolder = params["scriptFolder"] as? String {
             let path = "\(scriptFolder)/\(pluginName).sketchplugin"
-            pluginText.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding, error: nil)
+            do {
+                try pluginText.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding)
+            } catch let error as NSError {
+                print(error)
+            }
             return path
         }
         return nil
@@ -68,7 +77,11 @@ class SketchPlugin:NSObject {
     class func createScriptWithText(scriptText:String, scriptName:String="temp") -> String? {
         if let scriptFolder = params["scriptFolder"] as? String {
             let path = "\(scriptFolder)/\(scriptName).js"
-            scriptText.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding, error: nil)
+            do {
+                try scriptText.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding)
+            } catch let error as NSError {
+                print(error)
+            }
             return path
         }
         return nil
@@ -79,7 +92,7 @@ class SketchPlugin:NSObject {
         let selector = Selector("runPluginAtURL:")
         if sketchApp.respondsToSelector(selector) {
             bringSketchInFocus()
-            XPerformSelector.perform(sketchApp, selector: selector, withObject: url!)
+            XPerformSelector.perform(sketchApp, selector: selector, withObject: url)
         }
     }
     
